@@ -6,7 +6,7 @@ import Contents from "@/component/Contents";
 
 export default function Home() {
   return (
-    <div className="pt-48">
+    <div className="pt-40">
       <Navbar />
       <Contents />
       <Footer />
