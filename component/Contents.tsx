@@ -1,195 +1,63 @@
-"use client";
-
-import { motion } from "framer-motion";
-import type React from "react";
-import Link from "next/link";
-import NextImage from "next/image";
-import {
-  Calendar,
-  Eye,
-  Clock,
-  Briefcase,
-  Star,
-  TrendingUp,
-  Bookmark,
-  Share2,
-  ArrowRight,
-  Sparkles,
-  ImageIcon,
-  Zap,
-} from "lucide-react";
-import { useState } from "react";
+"use client"
+import { motion } from "framer-motion"
+import type React from "react"
+import Link from "next/link"
+import NextImage from "next/image"
+import { Calendar, Eye, Clock, Bookmark, Share2, ArrowRight, Sparkles, ImageIcon, Zap, Star } from "lucide-react"
+import { useState } from "react"
+import { mainArticles, advertisements, categoryColors, combinedSectionsData } from "./content-data"
 
 // Define interfaces for props
 interface ImageWithFallbackProps {
-  src: string;
-  alt: string;
-  className?: string;
-  aspectRatio?: string;
-  title?: string;
-  description?: string;
+  src: string
+  alt: string
+  className?: string
+  aspectRatio?: string
+  title?: string
+  description?: string
 }
 
 interface ArticleImageWithFallbackProps {
-  src: string;
-  alt: string;
-  className?: string;
-  title: string;
+  src: string
+  alt: string
+  className?: string
+  title: string
 }
 
 interface CategoryCardProps {
-  title: string;
-  icon: React.ElementType;
-  items: string[];
-  gradient: string;
-  linkPrefix: string;
-  delay: number;
-  iconColorClass?: string;
+  title: string
+  icon: React.ElementType
+  items: string[]
+  gradient: string
+  linkPrefix: string
+  delay: number
+  iconColorClass?: string
 }
 
 interface CombinedScrollingContentProps {
   sections: Array<{
-    id: string;
-    title: string;
-    icon: React.ElementType;
-    items: string[];
-    gradient: string;
-    linkPrefix: string;
-    itemBulletColorClass: string;
-    itemHoverBgClass: string;
-    itemHoverTextColorClass: string;
-  }>;
-  delay: number;
+    id: string
+    title: string
+    icon: React.ElementType
+    items: string[]
+    gradient: string
+    linkPrefix: string
+    itemBulletColorClass: string
+    itemHoverBgClass: string
+    itemHoverTextColorClass: string
+  }>
+  delay: number
 }
 
-interface CategoryColors {
-  [key: string]: string;
-  "Banking and Finance": string;
-  Investment: string;
-  Technology: string;
-  Construction: string;
-  Legal: string;
-}
-
-// Static data
-const mainArticles = [
-  {
-    id: 1,
-    title: "Ethiopian Deposit Insurance Fund Develops New Payout System to Support Small Savers",
-    excerpt:
-      "The Ethiopian Deposit Insurance Fund (EDIF) has announced that it is working on a new payout mechanism designed to support depositors, particularly first-time savers.",
-    author: "Business Editor",
-    category: "Banking and Finance",
-    date: "Jul 17, 2025",
-    readTime: "5 min read",
-    views: 2340,
-    image: "/care.png",
-    featured: true,
-  },
-  {
-    id: 2,
-    title: "New Investment Opportunities in Ethiopia's Manufacturing Sector",
-    excerpt:
-      "Government announces new incentives for foreign investors in manufacturing, creating thousands of job opportunities.",
-    author: "Investment Analyst",
-    category: "Investment",
-    date: "Jul 16, 2025",
-    readTime: "4 min read",
-    views: 1890,
-    image: "/cuso.png",
-  },
-  {
-    id: 3,
-    title: "Digital Transformation in Ethiopian Banking Sector",
-    excerpt: "Major banks are adopting new technologies to improve customer service and expand financial inclusion.",
-    author: "Tech Reporter",
-    category: "Technology",
-    date: "Jul 15, 2025",
-    readTime: "6 min read",
-    views: 1567,
-    image: "/dca.png",
-  },
-];
-
-const mostReadContent = [
-  "Customs Duty, Tariff, Levies and Taxes in Ethiopia",
-  "HS Code",
-  "Import and Export Regulations in Ethiopia",
-  "Ethiopian Shipping and Logistics Procedures on Booking, Shipping and Clearing",
-  "Import and Export Procedures in Ethiopia",
-];
-
-const editorsPick = [
-  "How to Participate in Government Tender or bid in Ethiopia: Regulations and Procedures",
-  "Ethiopia Business Profile",
-  "Consumer Protection Law in Ethiopia",
-  "I Am a Foreign Supplier: How Can I Participate in a Government Tender in Ethiopia?",
-  "How to Participate in Non-Government Tenders or EOI's in Ethiopia: Guidelines and Tips",
-];
-
-const businessGuides = [
-  "Business Registration and Licensing Procedures in Ethiopia",
-  "How to Start a PLC (Private Limited Company) in Ethiopia (particularly in Addis Ababa)",
-  "Regulations of Commercial Registration and Business Licensing in Ethiopia",
-  "Micro-Financing of Small Businesses in Ethiopia",
-  "Starting a Business in Ethiopia: Information and Frequently Asked Questions",
-];
-
-const advertisements = [
-  {
-    src: "/AD/Wepack2025 (1).gif",
-    alt: "Construction Equipment",
-    link: "/ad-1",
-    title: "Premium Construction Equipment",
-    description: "High-quality machinery for all your construction needs",
-  },
-  {
-    src: "/AD/Welland.gif",
-    alt: "Business Consulting Services",
-    link: "/ad-2",
-    title: "Expert Business Consulting",
-    description: "Professional guidance for business growth",
-  },
-  {
-    src: "/AD/Wepack2025.gif",
-    alt: "Financial Solutions",
-    link: "/ad-3",
-    title: "Financial Solutions",
-    description: "Comprehensive financial services and planning",
-  },
-  {
-    src: "/AD/DesGeneralTrading.gif",
-    alt: "Legal Services",
-    link: "/ad-4",
-    title: "Legal Advisory Services",
-    description: "Expert legal consultation and representation",
-  },
-  {
-    src: "/AD/Ethiop1.gif",
-    alt: "IT Solutions",
-    link: "/ad-5",
-    title: "IT Solutions & Support",
-    description: "Modern technology solutions for businesses",
-  },
-  {
-    src: "/AD/giz.Webp",
-    alt: "Insurance Services",
-    link: "/ad-6",
-    title: "Comprehensive Insurance",
-    description: "Protect your business with our insurance plans",
-  },
-];
-
-const categoryColors: CategoryColors = {
-  "Banking and Finance": "from-emerald-500 to-teal-600",
-  Investment: "from-purple-500 to-indigo-600",
-  Technology: "from-blue-500 to-cyan-600",
-  Construction: "from-orange-500 to-red-600",
-  Legal: "from-gray-500 to-slate-600",
-};
-
-function ImageWithFallback({ src, alt, className, aspectRatio = "aspect-[4/3]", title, description }: ImageWithFallbackProps) {
-  const [imageError, setImageError] = useState(false);
+function ImageWithFallback({
+  src,
+  alt,
+  className,
+  aspectRatio = "aspect-[4/3]",
+  title,
+  description,
+}: ImageWithFallbackProps) {
+  const [imageError, setImageError] = useState(false)
   return (
     <div className={`relative overflow-hidden ${aspectRatio} ${className}`}>
       {imageError ? (
@@ -215,12 +83,12 @@ function ImageWithFallback({ src, alt, className, aspectRatio = "aspect-[4/3]", 
         />
       )}
     </div>
-  );
+  )
 }
 
 function ArticleImageWithFallback({ src, alt, className, title }: ArticleImageWithFallbackProps) {
-  const [imageError, setImageError] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
   return (
     <div className={`relative overflow-hidden ${className}`}>
       {!imageLoaded && !imageError && (
@@ -246,7 +114,7 @@ function ArticleImageWithFallback({ src, alt, className, title }: ArticleImageWi
         />
       )}
     </div>
-  );
+  )
 }
 
 function CategoryCard({ title, icon: Icon, items, gradient, linkPrefix, delay, iconColorClass }: CategoryCardProps) {
@@ -285,16 +153,16 @@ function CategoryCard({ title, icon: Icon, items, gradient, linkPrefix, delay, i
         ))}
       </ul>
     </motion.div>
-  );
+  )
 }
 
 function CombinedScrollingContent({ sections, delay }: CombinedScrollingContentProps) {
-  const duplicatedSections = [...sections, ...sections];
-  const SECTION_CARD_WIDTH = 450;
-  const CARD_GAP = 32;
-  const totalOriginalWidth = sections.length * SECTION_CARD_WIDTH + (sections.length - 1) * CARD_GAP;
-  const SCROLL_SPEED_PX_PER_SEC = 40;
-  const animationDuration = totalOriginalWidth / SCROLL_SPEED_PX_PER_SEC;
+  const duplicatedSections = [...sections, ...sections]
+  const SECTION_CARD_WIDTH = 450
+  const CARD_GAP = 32
+  const totalOriginalWidth = sections.length * SECTION_CARD_WIDTH + (sections.length - 1) * CARD_GAP
+  const SCROLL_SPEED_PX_PER_SEC = 40
+  const animationDuration = totalOriginalWidth / SCROLL_SPEED_PX_PER_SEC
 
   return (
     <motion.div
@@ -395,46 +263,10 @@ function CombinedScrollingContent({ sections, delay }: CombinedScrollingContentP
         }
       `}</style>
     </motion.div>
-  );
+  )
 }
 
 export default function ContentLayout() {
-  const combinedSectionsData = [
-    {
-      id: "most-read",
-      title: "Most Read Content",
-      icon: TrendingUp,
-      items: mostReadContent,
-      gradient: "from-red-600 to-pink-700",
-      linkPrefix: "most-read",
-      itemBulletColorClass: "text-red-600",
-      itemHoverBgClass: "bg-red-50/50",
-      itemHoverTextColorClass: "text-red-900",
-    },
-    {
-      id: "editors-pick",
-      title: "Editor's Pick",
-      icon: Star,
-      items: editorsPick,
-      gradient: "from-yellow-500 to-orange-500",
-      linkPrefix: "editors-pick",
-      itemBulletColorClass: "text-yellow-600",
-      itemHoverBgClass: "bg-yellow-50/50",
-      itemHoverTextColorClass: "text-yellow-900",
-    },
-    {
-      id: "business-startup-guides",
-      title: "Business Startup Guides",
-      icon: Briefcase,
-      items: businessGuides,
-      gradient: "from-green-500 to-emerald-500",
-      linkPrefix: "startup-guide",
-      itemBulletColorClass: "text-green-600",
-      itemHoverBgClass: "bg-green-50/50",
-      itemHoverTextColorClass: "text-green-900",
-    },
-  ];
-
   return (
     <section className="py-12 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
@@ -448,23 +280,24 @@ export default function ContentLayout() {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="lg:col-span-3 space-y-6"
+            className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6"
           >
-            <div className="text-center mb-6">
+            <div className="text-center mb-6 sm:col-span-1 md:col-span-2 lg:col-span-1 relative">
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
-                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full text-sm font-semibold text-blue-800 border border-blue-200 shadow-lg"
+                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full text-sm font-semibold text-blue-800 border border-blue-200 shadow-lg relative z-10"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
                 Sponsored Content
               </motion.div>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-xl -z-0 scale-150" />
             </div>
             {advertisements.slice(0, 3).map((ad, index) => (
               <div
                 key={index}
-                className="relative overflow-hidden rounded-3xl shadow-xl bg-white"
+                className="relative overflow-hidden rounded-3xl shadow-xl bg-white group hover:scale-102 hover:shadow-2xl hover:ring-2 hover:ring-blue-500 hover:ring-offset-2 hover:translate-y-[-2px] transition-all duration-300"
               >
                 <Link href={ad.link} className="block">
                   <ImageWithFallback
@@ -472,10 +305,12 @@ export default function ContentLayout() {
                     alt={ad.alt}
                     title={ad.title}
                     description={ad.description}
-                    className=""
-                    aspectRatio="aspect-[4/5]"
+                    aspectRatio="aspect-[21/9] sm:aspect-[16/9] md:aspect-[4/1] lg:aspect-[4/5]"
                   />
                 </Link>
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                  AD
+                </div>
               </div>
             ))}
           </motion.div>
@@ -505,7 +340,7 @@ export default function ContentLayout() {
                   transition={{ duration: 0.5, delay: 0.5 }}
                   className="absolute top-6 left-6"
                 >
-                  <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2">
+                  <div className="bg-gradient-to-r from-red-600 to-pink-700 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2">
                     <Star className="w-4 h-4 fill-current" />
                     FEATURED
                   </div>
@@ -514,14 +349,14 @@ export default function ContentLayout() {
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    className="bg-white/90 backdrop-blur-sm p-3 rounded-full hover:bg-white transition-all duration-300 shadow-lg"
+                    className="bg-white/90 backdrop-blur-sm p-3 rounded-full hover:bg-white/70 transition-all duration-300 shadow-lg"
                   >
                     <Bookmark className="w-5 h-5 text-gray-600" />
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    className="bg-white/90 backdrop-blur-sm p-3 rounded-full hover:bg-white transition-all duration-300 shadow-lg"
+                    className="bg-white/90 backdrop-blur-sm p-3 rounded-full hover:bg-white/70 transition-all duration-300 shadow-lg"
                   >
                     <Share2 className="w-5 h-5 text-gray-600" />
                   </motion.button>
@@ -640,23 +475,24 @@ export default function ContentLayout() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="lg:col-span-3 space-y-6"
+            className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6"
           >
-            <div className="text-center mb-6">
+            <div className="text-center mb-6 sm:col-span-1 md:col-span-2 lg:col-span-1 relative">
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full text-sm font-semibold text-purple-800 border border-purple-200 shadow-lg"
+                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full text-sm font-semibold text-purple-800 border border-purple-200 shadow-lg relative z-10"
               >
                 <Zap className="w-4 h-4 mr-2" />
                 Featured Ads
               </motion.div>
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-xl -z-0 scale-150" />
             </div>
             {advertisements.slice(3).map((ad, index) => (
               <div
                 key={index}
-                className="relative overflow-hidden rounded-3xl shadow-xl bg-white"
+                className="relative overflow-hidden rounded-3xl shadow-xl bg-white group hover:scale-102 hover:shadow-2xl hover:ring-2 hover:ring-blue-500 hover:ring-offset-2 hover:translate-y-[-2px] transition-all duration-300"
               >
                 <Link href={ad.link} className="block">
                   <ImageWithFallback
@@ -664,10 +500,12 @@ export default function ContentLayout() {
                     alt={ad.alt}
                     title={ad.title}
                     description={ad.description}
-                    className=""
-                    aspectRatio="aspect-[4/5]"
+                    aspectRatio="aspect-[21/9] sm:aspect-[16/9] md:aspect-[4/1] lg:aspect-[4/5]"
                   />
                 </Link>
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                  AD
+                </div>
               </div>
             ))}
           </motion.div>
@@ -675,5 +513,5 @@ export default function ContentLayout() {
       </div>
       <CombinedScrollingContent sections={combinedSectionsData} delay={0.6} />
     </section>
-  );
+  )
 }
