@@ -1,9 +1,9 @@
-"use client"
-import { motion } from "framer-motion"
-import type React from "react"
+"use client";
 
-import Link from "next/link"
-import NextImage from "next/image" // Import Image from next/image
+import { motion } from "framer-motion";
+import type React from "react";
+import Link from "next/link";
+import NextImage from "next/image";
 import {
   Calendar,
   Eye,
@@ -17,14 +17,61 @@ import {
   Sparkles,
   ImageIcon,
   Zap,
-  ClipboardList,
-  HardHat,
-  Newspaper,
-  Building,
-  Handshake,
-} from "lucide-react"
-import { useState } from "react"
+} from "lucide-react";
+import { useState } from "react";
 
+// Define interfaces for props
+interface ImageWithFallbackProps {
+  src: string;
+  alt: string;
+  className?: string;
+  aspectRatio?: string;
+  title?: string;
+  description?: string;
+}
+
+interface ArticleImageWithFallbackProps {
+  src: string;
+  alt: string;
+  className?: string;
+  title: string;
+}
+
+interface CategoryCardProps {
+  title: string;
+  icon: React.ElementType;
+  items: string[];
+  gradient: string;
+  linkPrefix: string;
+  delay: number;
+  iconColorClass?: string;
+}
+
+interface CombinedScrollingContentProps {
+  sections: Array<{
+    id: string;
+    title: string;
+    icon: React.ElementType;
+    items: string[];
+    gradient: string;
+    linkPrefix: string;
+    itemBulletColorClass: string;
+    itemHoverBgClass: string;
+    itemHoverTextColorClass: string;
+  }>;
+  delay: number;
+}
+
+interface CategoryColors {
+  [key: string]: string;
+  "Banking and Finance": string;
+  Investment: string;
+  Technology: string;
+  Construction: string;
+  Legal: string;
+}
+
+// Static data
 const mainArticles = [
   {
     id: 1,
@@ -62,7 +109,7 @@ const mainArticles = [
     views: 1567,
     image: "/dca.png",
   },
-]
+];
 
 const mostReadContent = [
   "Customs Duty, Tariff, Levies and Taxes in Ethiopia",
@@ -70,7 +117,7 @@ const mostReadContent = [
   "Import and Export Regulations in Ethiopia",
   "Ethiopian Shipping and Logistics Procedures on Booking, Shipping and Clearing",
   "Import and Export Procedures in Ethiopia",
-]
+];
 
 const editorsPick = [
   "How to Participate in Government Tender or bid in Ethiopia: Regulations and Procedures",
@@ -78,7 +125,7 @@ const editorsPick = [
   "Consumer Protection Law in Ethiopia",
   "I Am a Foreign Supplier: How Can I Participate in a Government Tender in Ethiopia?",
   "How to Participate in Non-Government Tenders or EOI's in Ethiopia: Guidelines and Tips",
-]
+];
 
 const businessGuides = [
   "Business Registration and Licensing Procedures in Ethiopia",
@@ -86,48 +133,7 @@ const businessGuides = [
   "Regulations of Commercial Registration and Business Licensing in Ethiopia",
   "Micro-Financing of Small Businesses in Ethiopia",
   "Starting a Business in Ethiopia: Information and Frequently Asked Questions",
-]
-
-// New static data for the requested sections
-const tendersContent = [
-  "Government Tender for Infrastructure Project",
-  "Private Sector IT Solutions Tender",
-  "Consultancy Services Tender for Agriculture",
-  "Supply Chain Management Tender",
-  "Healthcare Equipment Procurement Tender",
-]
-
-const constructionContent = [
-  "New Residential Complex Development",
-  "Commercial Building Construction Updates",
-  "Road Network Expansion Project",
-  "Sustainable Urban Planning Initiatives",
-  "Bridge Construction and Maintenance",
-]
-
-const businessNewsContent = [
-  "Inflation Rates and Economic Outlook",
-  "Tech Startup Funding Rounds",
-  "Agricultural Sector Reforms",
-  "Tourism Industry Recovery",
-  "Manufacturing Output Growth",
-]
-
-const businessDirectoryContent = [
-  "Top 10 IT Companies in Addis Ababa",
-  "Leading Consulting Firms",
-  "Major Import-Export Businesses",
-  "Financial Institutions Listing",
-  "Manufacturing Companies by Sector",
-]
-
-const doingBusinessContent = [
-  "Steps to Register a New Company",
-  "Taxation Laws for Foreign Investors",
-  "Labor Laws and Employment Regulations",
-  "Intellectual Property Rights",
-  "Import/Export Licensing Requirements",
-]
+];
 
 const advertisements = [
   {
@@ -172,18 +178,18 @@ const advertisements = [
     title: "Comprehensive Insurance",
     description: "Protect your business with our insurance plans",
   },
-]
+];
 
-const categoryColors = {
+const categoryColors: CategoryColors = {
   "Banking and Finance": "from-emerald-500 to-teal-600",
   Investment: "from-purple-500 to-indigo-600",
   Technology: "from-blue-500 to-cyan-600",
   Construction: "from-orange-500 to-red-600",
   Legal: "from-gray-500 to-slate-600",
-}
+};
 
-function ImageWithFallback({ src, alt, className, aspectRatio = "aspect-[4/3]", title, description }) {
-  const [imageError, setImageError] = useState(false)
+function ImageWithFallback({ src, alt, className, aspectRatio = "aspect-[4/3]", title, description }: ImageWithFallbackProps) {
+  const [imageError, setImageError] = useState(false);
   return (
     <div className={`relative overflow-hidden ${aspectRatio} ${className}`}>
       {imageError ? (
@@ -204,17 +210,17 @@ function ImageWithFallback({ src, alt, className, aspectRatio = "aspect-[4/3]", 
           src={src || "/placeholder.svg"}
           alt={alt}
           fill
-          className={`object-cover`}
+          className="object-cover"
           onError={() => setImageError(true)}
         />
       )}
     </div>
-  )
+  );
 }
 
-function ArticleImageWithFallback({ src, alt, className, title }) {
-  const [imageError, setImageError] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(false)
+function ArticleImageWithFallback({ src, alt, className, title }: ArticleImageWithFallbackProps) {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   return (
     <div className={`relative overflow-hidden ${className}`}>
       {!imageLoaded && !imageError && (
@@ -240,17 +246,7 @@ function ArticleImageWithFallback({ src, alt, className, title }) {
         />
       )}
     </div>
-  )
-}
-
-interface CategoryCardProps {
-  title: string
-  icon: React.ElementType
-  items: string[]
-  gradient: string
-  linkPrefix: string
-  delay: number
-  iconColorClass?: string
+  );
 }
 
 function CategoryCard({ title, icon: Icon, items, gradient, linkPrefix, delay, iconColorClass }: CategoryCardProps) {
@@ -259,7 +255,7 @@ function CategoryCard({ title, icon: Icon, items, gradient, linkPrefix, delay, i
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/50 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl"
+      className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/50 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
     >
       <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
         <div className={`w-8 h-8 bg-gradient-to-r ${gradient} rounded-lg flex items-center justify-center shadow-md`}>
@@ -289,85 +285,54 @@ function CategoryCard({ title, icon: Icon, items, gradient, linkPrefix, delay, i
         ))}
       </ul>
     </motion.div>
-  )
-}
-
-interface CombinedScrollingContentProps {
-  sections: Array<{
-    id: string
-    title: string
-    icon: React.ElementType
-    items: string[]
-    gradient: string
-    linkPrefix: string
-    itemBulletColorClass: string
-    itemHoverBgClass: string
-    itemHoverTextColorClass: string
-  }>
-  delay: number
+  );
 }
 
 function CombinedScrollingContent({ sections, delay }: CombinedScrollingContentProps) {
-  // Duplicate sections for infinite scroll effect
-  const duplicatedSections = [...sections, ...sections]
-
-  // Define the fixed width of each section card (no horizontal margins here)
-  const SECTION_CARD_WIDTH = 450 // Increased width
-  // Calculate the total width of one set of original sections
-  // Add a small gap between cards for visual separation within the scroll
-  const CARD_GAP = 32 // 2rem gap between cards
-  const totalOriginalWidth = sections.length * SECTION_CARD_WIDTH + (sections.length - 1) * CARD_GAP
-
-  // Define a consistent scroll speed in pixels per second
-  const SCROLL_SPEED_PX_PER_SEC = 40
-
-  // Calculate the animation duration based on total width and desired speed
-  const animationDuration = totalOriginalWidth / SCROLL_SPEED_PX_PER_SEC
+  const duplicatedSections = [...sections, ...sections];
+  const SECTION_CARD_WIDTH = 450;
+  const CARD_GAP = 32;
+  const totalOriginalWidth = sections.length * SECTION_CARD_WIDTH + (sections.length - 1) * CARD_GAP;
+  const SCROLL_SPEED_PX_PER_SEC = 40;
+  const animationDuration = totalOriginalWidth / SCROLL_SPEED_PX_PER_SEC;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      // Removed p-6 and transform hover:-translate-y-1
       className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/50 overflow-hidden relative"
     >
       <h3 className="text-3xl font-extrabold text-gray-900 text-center relative z-10 pt-6 px-4 sm:px-6 lg:px-8">
-        {" "}
-        {/* Added px-4 sm:px-6 lg:px-8 for title padding */}
         <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-700">
           Curated Insights & Essential Guides
         </span>
-        <p className="text-base font-medium text-gray-600 mt-2 pb-6">Explore our top content and resources</p>{" "}
+        <p className="text-base font-medium text-gray-600 mt-2 pb-6">Explore our top content and resources</p>
       </h3>
       <div className="relative overflow-hidden group">
-        {" "}
-        {/* Removed py-4 from here */}
         <div
           className="flex animate-scroll-left group-hover:animation-pause"
           style={
             {
-              width: `${totalOriginalWidth * 2}px`, // Total width of duplicated content
-              animationDuration: `${animationDuration}s`, // Use calculated duration
-              "--scroll-translate-x": `-${totalOriginalWidth}px`, // Translate by the width of one set of original sections
+              width: `${totalOriginalWidth * 2}px`,
+              animationDuration: `${animationDuration}s`,
+              "--scroll-translate-x": `-${totalOriginalWidth}px`,
             } as React.CSSProperties
           }
         >
           {duplicatedSections.map((section, sectionIndex) => (
             <motion.div
-              key={`${section.id}-${sectionIndex}`} // Unique key for duplicated items
+              key={`${section.id}-${sectionIndex}`}
               whileHover={{
                 y: -5,
                 boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
               }}
-              className="flex-shrink-0 w-[450px] p-5 rounded-3xl shadow-2xl bg-white/90 backdrop-blur-md border border-white/70 transform transition-all duration-300 relative overflow-hidden group/card" // Updated width and padding
-              style={{ marginRight: sectionIndex % sections.length === sections.length - 1 ? "0px" : `${CARD_GAP}px` }} // Apply margin only between cards
+              className="flex-shrink-0 w-[450px] p-5 rounded-3xl shadow-2xl bg-white/90 backdrop-blur-md border border-white/70 transform transition-all duration-300 relative overflow-hidden group/card"
+              style={{ marginRight: sectionIndex % sections.length === sections.length - 1 ? "0px" : `${CARD_GAP}px` }}
             >
-              {/* Decorative background element for each card */}
               <div
                 className={`absolute inset-0 opacity-10 group-hover/card:opacity-20 transition-opacity duration-300 ${section.gradient} rounded-3xl`}
               />
-
               <h4 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-3 relative z-10">
                 <div
                   className={`w-9 h-9 bg-gradient-to-r ${section.gradient} rounded-xl flex items-center justify-center shadow-md`}
@@ -397,7 +362,6 @@ function CombinedScrollingContent({ sections, delay }: CombinedScrollingContentP
                   </li>
                 ))}
               </ul>
-              {/* "View All" button at the bottom of each card */}
               <div className="mt-6 text-center relative z-10">
                 <Link
                   href={`/${section.linkPrefix}`}
@@ -411,7 +375,6 @@ function CombinedScrollingContent({ sections, delay }: CombinedScrollingContentP
           ))}
         </div>
       </div>
-      {/* Add more subtle background elements for the entire scrolling section */}
       <div className="absolute bottom-0 left-1/2 w-64 h-64 bg-gradient-to-r from-blue-300/10 to-purple-300/10 rounded-full blur-3xl animate-pulse -translate-x-1/2 z-0"></div>
       <style jsx>{`
         @keyframes scroll-left {
@@ -432,7 +395,7 @@ function CombinedScrollingContent({ sections, delay }: CombinedScrollingContentP
         }
       `}</style>
     </motion.div>
-  )
+  );
 }
 
 export default function ContentLayout() {
@@ -470,11 +433,10 @@ export default function ContentLayout() {
       itemHoverBgClass: "bg-green-50/50",
       itemHoverTextColorClass: "text-green-900",
     },
-  ]
+  ];
 
   return (
     <section className="py-12 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
-      {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-400/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 right-10 w-48 h-48 bg-gradient-to-r from-red-400/20 to-pink-500/20 rounded-full blur-3xl animate-pulse"></div>
@@ -482,7 +444,6 @@ export default function ContentLayout() {
       </div>
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Sidebar - Advertisements */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -501,9 +462,9 @@ export default function ContentLayout() {
               </motion.div>
             </div>
             {advertisements.slice(0, 3).map((ad, index) => (
-              <div // Changed from motion.div
+              <div
                 key={index}
-                className="relative overflow-hidden rounded-3xl shadow-xl bg-white" // Removed hover effects and transitions
+                className="relative overflow-hidden rounded-3xl shadow-xl bg-white"
               >
                 <Link href={ad.link} className="block">
                   <ImageWithFallback
@@ -511,22 +472,19 @@ export default function ContentLayout() {
                     alt={ad.alt}
                     title={ad.title}
                     description={ad.description}
-                    className="" // Removed group-hover:scale-110 transition-transform duration-500
+                    className=""
                     aspectRatio="aspect-[4/5]"
                   />
-                  {/* Removed text overlay and content */}
                 </Link>
               </div>
             ))}
           </motion.div>
-          {/* Main Content Area */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="lg:col-span-6 space-y-10"
           >
-            {/* Featured Article */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -541,7 +499,6 @@ export default function ContentLayout() {
                   className="w-full h-80 group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                {/* Featured Badge */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -553,7 +510,6 @@ export default function ContentLayout() {
                     FEATURED
                   </div>
                 </motion.div>
-                {/* Action Buttons */}
                 <div className="absolute top-6 right-6 flex gap-3">
                   <motion.button
                     whileHover={{ scale: 1.1 }}
@@ -570,7 +526,6 @@ export default function ContentLayout() {
                     <Share2 className="w-5 h-5 text-gray-600" />
                   </motion.button>
                 </div>
-                {/* Category Badge */}
                 <div className="absolute bottom-6 left-6">
                   <span
                     className={`bg-gradient-to-r ${categoryColors[mainArticles[0].category] || "from-gray-500 to-gray-600"} text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg`}
@@ -608,21 +563,19 @@ export default function ContentLayout() {
                       <p className="text-sm text-gray-500">Business Journalist</p>
                     </div>
                   </div>
-                  <a href="Zemen-news">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg flex items-center gap-2"
-                  >
+                  <Link href="/Zemen-news">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg flex items-center gap-2"
+                    >
                       Read More
-                      
-                    <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-4 h-4" />
                     </motion.button>
-                    </a>
+                  </Link>
                 </div>
               </div>
             </motion.div>
-            {/* Other Articles */}
             <div className="space-y-8">
               {mainArticles.slice(1).map((article, index) => (
                 <motion.div
@@ -666,26 +619,23 @@ export default function ContentLayout() {
                             <span>{article.views}</span>
                           </div>
                         </div>
-                        <a href="Zemen-tenders">
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-2 group/btn"
-                        >
-                          Read More
-                          <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                        <Link href="/Zemen-tenders">
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-2 group/btn"
+                          >
+                            Read More
+                            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
                           </motion.button>
-                          </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </div>
-
-           
           </motion.div>
-          {/* Right Sidebar - Advertisements */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -704,9 +654,9 @@ export default function ContentLayout() {
               </motion.div>
             </div>
             {advertisements.slice(3).map((ad, index) => (
-              <div // Changed from motion.div
+              <div
                 key={index}
-                className="relative overflow-hidden rounded-3xl shadow-xl bg-white" // Removed hover effects and transitions
+                className="relative overflow-hidden rounded-3xl shadow-xl bg-white"
               >
                 <Link href={ad.link} className="block">
                   <ImageWithFallback
@@ -714,18 +664,16 @@ export default function ContentLayout() {
                     alt={ad.alt}
                     title={ad.title}
                     description={ad.description}
-                    className="" // Removed group-hover:scale-110 transition-transform duration-500
+                    className=""
                     aspectRatio="aspect-[4/5]"
                   />
-                  {/* Removed text overlay and content */}
                 </Link>
               </div>
             ))}
           </motion.div>
         </div>
       </div>
-      {/* Combined Scrolling Content - NOW OUTSIDE THE MAX-WIDTH CONTAINER */}
       <CombinedScrollingContent sections={combinedSectionsData} delay={0.6} />
     </section>
-  )
+  );
 }
